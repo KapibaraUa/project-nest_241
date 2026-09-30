@@ -1,22 +1,31 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-import { CategoryModule } from './category/category.module.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CategoryModule } from './category/category.module.js';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+ 
 @Module({
-  imports:
-  
-  [
-  TypeOrmModule.forRoot({
-    type:'postgres',
-    host:'',
-    port:27544  ,
-    username:'avnadmin',
-    password:'',
-    database:'defaultdb',
-    autoLoadEntities : true
-  }),
-  CategoryModule
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USER'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
+        autoLoadEntities: true,
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      }),
+    }),
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

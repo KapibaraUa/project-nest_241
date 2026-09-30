@@ -17,5 +17,6 @@ export class CategoryCreateReqDto {
   parent_id: number | null;
   @IsBoolean({message:"Поле должно быть true или false"})
   is_show: boolean;
-  
+  @IsString({message:"Поле должно быть строкой"})
+  description:string;
 }
