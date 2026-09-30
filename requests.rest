@@ -6,3 +6,13 @@ Content-Type: application/json
     "image" : "fruits.png",
     "parent_id" : null
 }
+
+###
+POST http://localhost:3000/user
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "password": "secretpassword",
+    "fullname": "Artem"
+}
